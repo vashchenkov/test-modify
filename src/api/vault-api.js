@@ -13,22 +13,21 @@ const vaultsList = [
     }
 ]
 
-export default  {
+export default {
 
-  async loadAllVaults(callback) {
-      setTimeout(
-          callback(vaultsList), 1000
-      )
-  },
-  async createVault(vaultRequest, callback) {
-      setTimeout(
-          callback(), 400
-      )
-  },
-  async updateVault(request, callback) {
-      vaultsList.filter(item => item.id === request.id)[0].name = request.vaultName
-      setTimeout(
-          callback(true), 200
-      )
-  }
+    loadAllVaults(callback) {
+        setTimeout(() => callback(vaultsList), 1000)
+    },
+    createVault(vaultRequest, callback) {
+        setTimeout(() => callback(), 500)
+    },
+    updateVault(request, callback) {
+        vaultsList.filter(item => item.id === request.id)[0].name = request.vaultName;
+        setTimeout(() => callback(true), 500)
+    },
+    deleteVault(request, callback) {
+        const index = vaultsList.findIndex(item => item.id === request.id);
+        vaultsList.splice(index,1);
+        setTimeout(() => callback(true), 500)
+    }
 }

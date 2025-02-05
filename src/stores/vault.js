@@ -18,7 +18,8 @@ export const useVaultStore = defineStore('vault', () => {
 
   function reloadVaults() {
     vaultApi.loadAllVaults((resp) => {
-      vaults.value = resp;
+      clearVaults();
+      vaults.value.push(...resp);
     })
   }
 
@@ -29,18 +30,40 @@ export const useVaultStore = defineStore('vault', () => {
     })
   }
 
-  function reloadSecrets() {
-    vaultApi.loadSecretsForVault({id: currentVault.value.id}, (list) => {
-      secrets.value = list
-    })
-  }
-
   function setCurrentVault(vault) {
     currentVault.value = vault;
     secrets.value = [];
     if (vault !== null) {
       reloadSecrets()
     }
+  }
+
+  function deleteVault(vaultId) {
+    const request = { id: vaultId}
+    vaultApi.deleteVault(request, (result) => {
+      if (result) {
+        reloadVaults()
+      }
+    })
+  }
+
+  function updateVault(vaultId, vaultName) {
+    const request = {
+      id: vaultId,
+      vaultName: vaultName
+    }
+    vaultApi.updateVault(request, (result) => {
+      if (result) {
+        reloadVaults()
+        emitter.emit(VaultsEvents.vaultSaved)
+      }
+    })
+  }
+
+  function reloadSecrets() {
+    vaultApi.loadSecretsForVault({id: currentVault.value.id}, (list) => {
+      secrets.value = list
+    })
   }
 
   function createSecret(name, userName, secret, description) {
@@ -72,28 +95,6 @@ export const useVaultStore = defineStore('vault', () => {
     vaultApi.deleteSecret(request, (result) => {
       if (result) {
         reloadSecrets()
-      }
-    })
-  }
-
-  function deleteVault(vaultId) {
-    const request = { id: vaultId}
-    vaultApi.deleteVault(request, (result) => {
-      if (result) {
-        reloadVaults()
-      }
-    })
-  }
-
-  function updateVault(vaultId, vaultName) {
-    const request = {
-      id: vaultId,
-      vaultName: vaultName
-    }
-    vaultApi.updateVault(request, (result) => {
-      if (result) {
-        reloadVaults()
-        emitter.emit(VaultsEvents.vaultSaved)
       }
     })
   }
