@@ -14,6 +14,7 @@
     </v-list-item>
   </v-list>
   <EditVault
+    v-if="showEditDialog"
     v-model="showEditDialog"
     :vault-name="theName"
     :vault-id="theId"

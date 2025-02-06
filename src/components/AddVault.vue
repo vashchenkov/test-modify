@@ -6,6 +6,7 @@
     @click="dialog = true"
   />
   <EditVault
+    v-if="dialog"
     v-model="dialog"
     vault-name=""
     @close="dialog = false"

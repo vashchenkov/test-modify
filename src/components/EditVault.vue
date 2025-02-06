@@ -14,9 +14,9 @@
             sm="12"
           >
             {{props.vaultName}} /
-            {{data.vaultName}}
+            {{localValue}}
             <v-text-field
-              v-model="data.vaultName"
+              v-model="localValue"
               label="Название сейфа*"
               required
             ></v-text-field>
@@ -57,12 +57,12 @@ import {useEmitter} from "@/emitter.js";
 const emit = defineEmits(['close'])
 
 const props = defineProps({
-  vaultName:  String,
+  vaultName: String,
   vaultId: String
 })
 const store = useVaultStore()
 const emitter = useEmitter()
-const data = reactive({ ...props })
+const localValue = ref(props.vaultName)
 
 function cancel() {
   emit('close')
@@ -70,9 +70,9 @@ function cancel() {
 
 function save() {
   if ( (props.vaultId == null) || (props.vaultId.length === 0) ) {
-    store.createVault(data.vaultName)
+    store.createVault(localValue.value)
   } else {
-    store.updateVault(props.vaultId, data.vaultName)
+    store.updateVault(props.vaultId, localValue.value)
   }
 }
 onMounted(() => {
